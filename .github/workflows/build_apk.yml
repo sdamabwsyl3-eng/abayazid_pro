@@ -9,55 +9,64 @@ on:
 
 jobs:
   build-apk:
-    name: بناء ملف APK السحابي لميكروتك
+    name: Build Abayazeed Link Manager APK
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     steps:
-      - name: استنساخ المستودع
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: إعداد بيئة Java 17
-        uses: actions/setup-java@v4
+      # 🟡 أولاً: أنشئ مشروع Flutter → بهذا تُنشأ ملفات الأندرويد و Gradle
+      - name: Create Flutter project
+        run: |
+          flutter create --no-pub --org com.abayazeed --project-name abayazeedlinkmanager app_temp
+          cp -r lib/* app_temp/lib/
+
+      # 🟢 ثانياً: إعداد Java → بعد إنشاء الملفات ✅
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
+          working-directory: app_temp
 
-      - name: إعداد Flutter 3.19.0
+      # 🟣 ثالثاً: إعداد Flutter
+      - name: Set up Flutter 3.19.0
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
           cache: true
 
-      - name: تجهيز المشروع وإنشاء ملفات الأندرويد
-        run: |
-          flutter create --no-pub --org com.abayazeed --project-name abayazeedlinkmanager app_temp
-          cp -r lib/* app_temp/lib/
-
-      - name: تعديل اسم التطبيق في AndroidManifest
+      # 🔵 تعديل الإعدادات
+      - name: Configure Android settings
         run: |
           sed -i 's/android:label=".*"/android:label="أبا يزيد لنك منجر"/' app_temp/android/app/src/main/AndroidManifest.xml
           sed -i 's/<application/<application android:usesCleartextTraffic="true"/' app_temp/android/app/src/main/AndroidManifest.xml
 
-      - name: تثبيت الحزم والتبعيات
+      # 🟠 تثبيت التبعيات
+      - name: Install dependencies
         run: |
           cd app_temp
           flutter pub add google_fonts
           flutter pub get
 
-      - name: بناء ملف APK النهائي
+      # 🟡 بناء APK
+      - name: Build Release APK
         run: |
           cd app_temp
           flutter build apk --release --no-tree-shake-icons
 
-      - name: تجهيز وتسمية ملف APK للتحميل
+      # 🟢 تجهيز الملف
+      - name: Prepare APK artifact
         run: |
           mkdir -p output_release
           cp app_temp/build/app/outputs/flutter-apk/app-release.apk output_release/abayazeed_link_manager.apk
 
-      - name: رفع ملف APK كملف مرفق
+      # 🔴 رفع الملف
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: abayazeed-link-manager-apk
