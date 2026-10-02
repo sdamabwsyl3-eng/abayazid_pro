@@ -1,74 +1,39 @@
-name: Build & Release Abayazeed Link Manager APK
+name: Build Flutter APK
 
 on:
   push:
-    branches:
-      - main
-      - master
-  workflow_dispatch:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  build-apk:
-    name: Build Abayazeed Link Manager APK
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 🟡 أولاً: أنشئ مشروع Flutter → بهذا تُنشأ ملفات الأندرويد و Gradle
-      - name: Create Flutter project
-        run: |
-          flutter create --no-pub --org com.abayazeed --project-name abayazeedlinkmanager app_temp
-          cp -r lib/* app_temp/lib/
-
-      # 🟢 ثانياً: إعداد Java → بعد إنشاء الملفات ✅
-      - name: Set up Java 17
-        uses: actions/setup-java@v5
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
+          distribution: 'zulu'
           java-version: '17'
-          distribution: 'temurin'
-          cache: 'gradle'
-          working-directory: app_temp
 
-      # 🟣 ثالثاً: إعداد Flutter
-      - name: Set up Flutter 3.19.0
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0'
+          flutter-version: '3.x'
           channel: 'stable'
-          cache: true
 
-      # 🔵 تعديل الإعدادات
-      - name: Configure Android settings
-        run: |
-          sed -i 's/android:label=".*"/android:label="أبا يزيد لنك منجر"/' app_temp/android/app/src/main/AndroidManifest.xml
-          sed -i 's/<application/<application android:usesCleartextTraffic="true"/' app_temp/android/app/src/main/AndroidManifest.xml
-
-      # 🟠 تثبيت التبعيات
       - name: Install dependencies
-        run: |
-          cd app_temp
-          flutter pub add google_fonts
-          flutter pub get
+        run: flutter pub get
 
-      # 🟡 بناء APK
-      - name: Build Release APK
-        run: |
-          cd app_temp
-          flutter build apk --release --no-tree-shake-icons
+      - name: Build APK (Release)
+        run: flutter build apk --release
 
-      # 🟢 تجهيز الملف
-      - name: Prepare APK artifact
-        run: |
-          mkdir -p output_release
-          cp app_temp/build/app/outputs/flutter-apk/app-release.apk output_release/abayazeed_link_manager.apk
-
-      # 🔴 رفع الملف
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: abayazeed-link-manager-apk
-          path: output_release/abayazeed_link_manager.apk
-          retention-days: 30
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
