@@ -1,0 +1,14 @@
+yaml
+release
+
+      - name: 🏷️ تجهيز وتسمية ملف الـ APK الناتج
+        run: |
+          mkdir -p output_release
+          cp app_temp/build/app/outputs/flutter-apk/app-release.apk output_release/abayazeed_mikrotik_pro.apk
+
+      - name: 📤 رفع ملف الـ APK للتحميل المباشر إلى هاتفك
+        uses: actions/upload-artifact@v4
+        with:
+          name: abayazeed-link-manager-apk
+          path: output_release/abayazeed_mikrotik_pro.apk
+          retention-days: 30
