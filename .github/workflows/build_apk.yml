@@ -1,40 +1,63 @@
-name: Build Flutter APK
+name: 🚀 Build Abayazeed Link Manager APK
 
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-apk:
+    name: 🏗️ بناء ملف APK سحابياً
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: 📥 جلب ملفات المستودع
         uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v5   # تم التحديث من v4 إلى v5
+      - name: ☕ إعداد بيئة Java 17
+        uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Flutter
+      - name: 💙 إعداد بيئة Flutter 3.19
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: '3.19.0'
           channel: 'stable'
-          cache: true   # إضافة كاش لتسريع البناء
+          cache: true
 
-      - name: Install dependencies
+      - name: 🏗️ إنشاء مشروع Flutter جديد
+        run: |
+          flutter create --org com.abayazeed --project-name abayazeed_link_manager tmp_project
+
+      - name: 📋 نسخ ملفاتنا إلى المشروع
+        run: |
+          cp tmp_project/pubspec.yaml tmp_project/pubspec.yaml.bak
+          cp -r tmp_project/android .
+          cp -r tmp_project/ios .
+          cp -r tmp_project/test .
+          cp -r tmp_project/lib tmp_project/lib.bak
+          cp -r lib/* tmp_project/lib/
+          cp pubspec.yaml tmp_project/pubspec.yaml
+
+      - name: 📦 تحميل حزم pubspec.yaml
+        working-directory: tmp_project
         run: flutter pub get
 
-      - name: Build APK (Release)
+      - name: 🔨 تجميع وبناء ملف APK للإنتاج
+        working-directory: tmp_project
         run: flutter build apk --release
 
-      - name: Upload APK Artifact
+      - name: 🏷️ تجهيز وتسمية الـ APK
+        run: |
+          mkdir -p output_release
+          cp tmp_project/build/app/outputs/flutter-apk/app-release.apk output_release/abayazeed_link_manager_v1.0.apk
+
+      - name: 📤 رفع ملف الـ APK للتحميل المباشر
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: abayazeed-link-manager-apk
+          path: output_release/abayazeed_link_manager_v1.0.apk
+          retention-days: 30
