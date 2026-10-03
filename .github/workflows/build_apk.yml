@@ -40,7 +40,12 @@ jobs:
           cp -r tmp_project/test .
           cp -r tmp_project/lib tmp_project/lib.bak
           cp -r lib/* tmp_project/lib/
+          cp -r assets tmp_project/assets
           cp pubspec.yaml tmp_project/pubspec.yaml
+
+      - name: 🔎 التحقق من وجود ملفات الخط
+        run: |
+          ls -la tmp_project/assets/fonts
 
       - name: 📦 تحميل حزم pubspec.yaml
         working-directory: tmp_project
