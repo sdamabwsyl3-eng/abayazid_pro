@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +13,29 @@ void main() {
     ),
   );
   runApp(const AbayazeedApp());
+}
+
+/// الخط المحلي (يعمل بدون إنترنت) — بديل لحزمة google_fonts
+class GoogleFonts {
+  static TextStyle ibmPlexSansArabic({
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    double? height,
+    double? letterSpacing,
+  }) =>
+      TextStyle(
+        fontFamily: 'IBMPlexSansArabic',
+        color: color,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        height: height,
+        letterSpacing: letterSpacing,
+      );
+
+  static TextTheme ibmPlexSansArabicTextTheme([TextTheme? base]) =>
+      (base ?? ThemeData.dark().textTheme)
+          .apply(fontFamily: 'IBMPlexSansArabic');
 }
 
 /// ألوان وثيم التطبيق السيبراني الموحد
@@ -36,7 +58,6 @@ class AbayazeedApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // تطبيق الخط العربي الرسمي الموحد IBM Plex Sans Arabic على كامل المنظومة
     final arabicTextTheme = GoogleFonts.ibmPlexSansArabicTextTheme(
       ThemeData.dark().textTheme,
     );
@@ -191,7 +212,7 @@ class _MainGateScreenState extends State<MainGateScreen> {
 }
 
 // ==============================================================================
-// 1. شاشة تسجيل الدخول المدمجة بالخلفية السيبرانية والشعار 3D والخط العربي
+// 1. شاشة تسجيل الدخول
 // ==============================================================================
 class LoginCyberScreen extends StatelessWidget {
   final VoidCallback onLogin;
@@ -203,7 +224,6 @@ class LoginCyberScreen extends StatelessWidget {
       backgroundColor: CyberColors.bgDark,
       body: Stack(
         children: [
-          // الخلفية السيبرانية المتدرجة
           Positioned.fill(
             child: CustomPaint(
               painter: CyberGridPainter(),
@@ -218,7 +238,6 @@ class LoginCyberScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // الشعار السيبراني المضيء
                       Container(
                         width: 96,
                         height: 96,
@@ -257,8 +276,6 @@ class LoginCyberScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 36),
-
-                      // صندوق تسجيل الدخول الزجاجي
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -357,7 +374,6 @@ class DashboardTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // بطاقة الراوتر المتصل
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -395,8 +411,6 @@ class DashboardTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-
-        // شبكة المقاييس والمؤشرات اللحظية
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
@@ -412,8 +426,6 @@ class DashboardTab extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-
-        // العمليات الميدانية السريعة
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -489,301 +501,11 @@ class DashboardTab extends StatelessWidget {
             children: [
               Text('أبايذيد لنك منجر', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18)),
               Text('MIKROTIK HOTSPOT CORE', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black54, fontSize: 10)),
-              const Divider(color: Colors.black84, thickness: 1.2),
+              const Divider(color: Colors.black87, thickness: 1.2),
               Text('باقة 24 ساعة توربو — 2,500 د.ع', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               const Icon(Icons.qr_code_2, size: 74, color: Colors.black),
               const SizedBox(height: 6),
               Text('كود المستخدم: AY-8840-2911', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
               Text('رمز الـ PIN: 491028', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
-              const Divider(color: Colors.black54),
-              Text('✂️ أمر القص التلقائي: تم بنجاح', style: GoogleFonts.ibmPlexSansArabic(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('إغلاق', style: GoogleFonts.ibmPlexSansArabic(color: CyberColors.cyan)),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ==============================================================================
-// 3. شاشة إدارة الكروت والطباعة (Vouchers Tab)
-// ==============================================================================
-class VouchersTab extends StatelessWidget {
-  const VouchersTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('فئات وباقات الهوتسبوت', style: GoogleFonts.ibmPlexSansArabic(fontWeight: FontWeight.bold, fontSize: 16)),
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: CyberColors.cyan,
-                foregroundColor: Colors.black,
-              ),
-              icon: const Icon(Icons.add, size: 18),
-              label: Text('توليد دفعة جديدة', style: GoogleFonts.ibmPlexSansArabic(fontWeight: FontWeight.bold)),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'تم توليد 50 كرت جديد وحقنها في MikroTik بنجاح ✅',
-                      style: GoogleFonts.ibmPlexSansArabic(),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        _voucherItem(context, 'باقة 24 ساعة توربو', '2,500 د.ع', '10 GB', 'المتبقي: 184 كرت'),
-        _voucherItem(context, 'باقة أسبوعية بلا حدود', '10,000 د.ع', '50 GB', 'المتبقي: 62 كرت'),
-        _voucherItem(context, 'باقة شهرية VIP', '35,000 د.ع', '200 GB', 'المتبقي: 19 كرت'),
-      ],
-    );
-  }
-
-  Widget _voucherItem(BuildContext ctx, String title, String price, String quota, String count) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: CyberColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: CyberColors.border),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: CyberColors.surfaceHigh, borderRadius: BorderRadius.circular(10)),
-            child: const Icon(Icons.wifi, color: CyberColors.cyan),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: GoogleFonts.ibmPlexSansArabic(fontWeight: FontWeight.bold, fontSize: 14)),
-                const SizedBox(height: 4),
-                Text('$quota — $count', style: GoogleFonts.ibmPlexSansArabic(color: Colors.white54, fontSize: 11)),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(price, style: GoogleFonts.ibmPlexSansArabic(color: CyberColors.cyan, fontWeight: FontWeight.bold, fontSize: 14)),
-              const SizedBox(height: 4),
-              Text('جاهز للطباعة', style: GoogleFonts.ibmPlexSansArabic(color: Colors.white30, fontSize: 10)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ==============================================================================
-// 4. شاشة المشتركين النشطين (Active Users Tab)
-// ==============================================================================
-class ActiveUsersTab extends StatelessWidget {
-  const ActiveUsersTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Text(
-          'المشتركون المتصلون على راوتر MikroTik',
-          style: GoogleFonts.ibmPlexSansArabic(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(height: 12),
-        _userTile(context, 'أحمد خليل', '192.168.88.104', '4.8 Mbps', '3.8 GB'),
-        _userTile(context, 'محمد زيادة', '192.168.88.118', '18.2 Mbps', '18.4 GB'),
-        _userTile(context, 'سالم مصطفى', '192.168.88.89', '9.4 Mbps', '9.2 GB'),
-        _userTile(context, 'حيدر يوسف', '192.168.88.204', '1.2 Mbps', '0.4 GB'),
-      ],
-    );
-  }
-
-  Widget _userTile(BuildContext ctx, String name, String ip, String speed, String usage) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: CyberColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: CyberColors.border),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(backgroundColor: CyberColors.surfaceHigh, child: const Icon(Icons.person, color: CyberColors.green)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: GoogleFonts.ibmPlexSansArabic(fontWeight: FontWeight.bold, fontSize: 14)),
-                Text('IP: $ip | الاستهلاك: $usage', style: GoogleFonts.ibmPlexSansArabic(color: Colors.white54, fontSize: 11)),
-              ],
-            ),
-          ),
-          Text(speed, style: GoogleFonts.ibmPlexSansArabic(color: CyberColors.cyan, fontWeight: FontWeight.bold)),
-          IconButton(
-            icon: const Icon(Icons.power_settings_new, color: CyberColors.red, size: 20),
-            onPressed: () {
-              ScaffoldMessenger.of(ctx).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'تم فصل جلسة المشترك $name بنجاح',
-                    style: GoogleFonts.ibmPlexSansArabic(),
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ==============================================================================
-// 5. شاشة إعدادات العتاد و MikroTik (Hardware Tab)
-// ==============================================================================
-class HardwareTab extends StatelessWidget {
-  const HardwareTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Text(
-          'إعدادات الربط مع راوتر MikroTik RouterOS',
-          style: GoogleFonts.ibmPlexSansArabic(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(height: 16),
-        _field('عنوان IP الراوتر (Host IP)', '192.168.88.1'),
-        const SizedBox(height: 12),
-        _field('اسم المستخدم (REST API User)', 'app_admin'),
-        const SizedBox(height: 12),
-        _field('كلمة المرور (Password)', '••••••••••••', obscure: true),
-        const SizedBox(height: 16),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: CyberColors.cyan,
-            foregroundColor: Colors.black,
-            minimumSize: const Size.fromHeight(48),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-          icon: const Icon(Icons.sync),
-          label: Text('فحص ومزامنة الاتصال الحي', style: GoogleFonts.ibmPlexSansArabic(fontWeight: FontWeight.bold)),
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'الاتصال مستقر وراوتر ميكروتك متزامن بنجاح ONLINE',
-                  style: GoogleFonts.ibmPlexSansArabic(),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _field(String label, String hint, {bool obscure = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: GoogleFonts.ibmPlexSansArabic(fontSize: 12, color: Colors.white70)),
-        const SizedBox(height: 6),
-        TextField(
-          obscureText: obscure,
-          style: GoogleFonts.ibmPlexSansArabic(color: Colors.white, fontSize: 14),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: GoogleFonts.ibmPlexSansArabic(color: Colors.white30),
-            filled: true,
-            fillColor: CyberColors.surface,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: CyberColors.border)),
-            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: CyberColors.border)),
-            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: CyberColors.cyan)),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _MetricCard extends StatelessWidget {
-  final String title;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  const _MetricCard({required this.title, required this.value, required this.icon, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: CyberColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: CyberColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Icon(icon, color: color, size: 22),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: GoogleFonts.ibmPlexSansArabic(fontSize: 10, color: Colors.white54)),
-              Text(value, style: GoogleFonts.ibmPlexSansArabic(fontSize: 15, fontWeight: FontWeight.bold, color: color)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// رسام الشبكة السيبرانية لتوليد خلفية الشاشات ديناميكياً بأعلى أداء
-class CyberGridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = CyberColors.cyan.withOpacity(0.04)
-      ..strokeWidth = 1.0;
-
-    const double step = 32.0;
-    for (double x = 0; x < size.width; x += step) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-    }
-    for (double y = 0; y < size.height; y += step) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
+              const Divider(color: Colors.black54
