@@ -1210,7 +1210,7 @@ class DashboardTab extends StatelessWidget {
             children: [
               Text('أبايذيد لنك منجر', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18)),
               Text('شبكة أبو يزيد نت — MIKROTIK HOTSPOT', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black54, fontSize: 10)),
-              const Divider(color: Colors.black84, thickness: 1.2),
+              const Divider(color: Colors.black87, thickness: 1.2),
               Text('باقة 24 ساعة توربو — 2,500 د.ع', style: GoogleFonts.ibmPlexSansArabic(color: Colors.black, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               const Icon(Icons.qr_code_2, size: 74, color: Colors.black),
